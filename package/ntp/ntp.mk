@@ -27,6 +27,7 @@ NTP_CONF_OPTS = \
 
 # 0002-ntp-syscalls-fallback.patch
 NTP_AUTORECONF = YES
+NTP_INSTALL_STAGING = YES
 
 ifeq ($(BR2_PACKAGE_OPENSSL),y)
 NTP_CONF_OPTS += --with-crypto --enable-openssl-random
@@ -85,6 +86,32 @@ NTP_CONF_OPTS += --with-sntp
 else
 NTP_CONF_OPTS += --without-sntp
 endif
+
+define NTP_INSTALL_STAGING_CMDS
+	mkdir -p $(STAGING_DIR)/usr/include/libntp/isc $(STAGING_DIR)/usr/lib
+	install -m 755 $(@D)/ntpq/libntpq.h $(STAGING_DIR)/usr/include/libntp
+	install -m 755 $(@D)/include/ntp_net.h $(STAGING_DIR)/usr/include/libntp
+	install -m 755 $(@D)/include/ntp_malloc.h $(STAGING_DIR)/usr/include/libntp
+	install -m 755 $(@D)/include/ntp_types.h $(STAGING_DIR)/usr/include/libntp
+	install -m 755 $(@D)/include/ntp_rfc2553.h $(STAGING_DIR)/usr/include/libntp
+	install -m 755 $(@D)/include/ntp_machine.h $(STAGING_DIR)/usr/include/libntp
+	install -m 755 $(@D)/include/ntp_proto.h $(STAGING_DIR)/usr/include/libntp
+	install -m 755 $(@D)/lib/isc/unix/include/isc/net.h $(STAGING_DIR)/usr/include/libntp/isc
+	install -m 755 $(@D)/lib/isc/include/isc/platform.h $(STAGING_DIR)/usr/include/libntp/isc
+	install -m 755 $(@D)/lib/isc/include/isc/lang.h $(STAGING_DIR)/usr/include/libntp/isc
+	install -m 755 $(@D)/lib/isc/include/isc/types.h $(STAGING_DIR)/usr/include/libntp/isc
+	install -m 755 $(@D)/lib/isc/include/isc/bind9.h $(STAGING_DIR)/usr/include/libntp/isc
+	install -m 755 $(@D)/lib/isc/include/isc/namespace.h $(STAGING_DIR)/usr/include/libntp/isc
+	install -m 755 $(@D)/lib/isc/unix/include/isc/int.h $(STAGING_DIR)/usr/include/libntp/isc
+	install -m 755 $(@D)/lib/isc/unix/include/isc/offset.h $(STAGING_DIR)/usr/include/libntp/isc
+	install -m 755 $(@D)/lib/isc/include/isc/boolean.h $(STAGING_DIR)/usr/include/libntp/isc
+	install -m 755 $(@D)/lib/isc/include/isc/assertions.h $(STAGING_DIR)/usr/include/libntp/isc
+	install -m 755 $(@D)/lib/isc/include/isc/list.h $(STAGING_DIR)/usr/include/libntp/isc
+	install -m 755 $(@D)/lib/isc/include/isc/ipv6.h $(STAGING_DIR)/usr/include/libntp/isc
+	install -m 755 $(@D)/ntpq/libntpq.a $(STAGING_DIR)/usr/lib
+	install -m 755 $(@D)/libntp/libntp.a $(STAGING_DIR)/usr/lib
+	install -m 755 $(@D)/config.h $(STAGING_DIR)/usr/include/libntp
+endef
 
 NTP_INSTALL_FILES_$(BR2_PACKAGE_NTP_NTP_KEYGEN) += util/ntp-keygen
 NTP_INSTALL_FILES_$(BR2_PACKAGE_NTP_NTP_WAIT) += scripts/ntp-wait/ntp-wait
