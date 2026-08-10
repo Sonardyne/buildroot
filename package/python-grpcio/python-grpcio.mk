@@ -11,4 +11,11 @@ PYTHON_GRPCIO_SETUP_TYPE = setuptools
 PYTHON_GRPCIO_LICENSE = Apache-2.0
 PYTHON_GRPCIO_LICENSE_FILES = LICENSE
 
+# Remove license field from toml file. GRPCIO version licence incompatible with setuptools, which aborts build
+# Licence already tracked above
+define PYTHON_GRPCIO_REMOVE_PYPROJECT_LICENSE
+	$(SED) '/^license = "Apache-2.0"$$/d' $(@D)/pyproject.toml
+endef
+PYTHON_GRPCIO_POST_PATCH_HOOKS += PYTHON_GRPCIO_REMOVE_PYPROJECT_LICENSE
+
 $(eval $(python-package))
